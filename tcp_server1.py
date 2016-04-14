@@ -3,7 +3,7 @@ import socket
 from contextlib import closing
 
 def main():
-  host = '127.0.0.1'
+  host = '192.168.1.179'
   port = 4000
   backlog = 10
   bufsize = 4096
