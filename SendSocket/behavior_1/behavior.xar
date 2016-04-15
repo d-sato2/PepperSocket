@@ -20,12 +20,13 @@
                             <script language="4">
                                 <content>
                                     <![CDATA[import socket
+import datetime
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
 
     def onLoad(self):
-        self.host = "192,168.1.179"
+        self.host = "192.168.1.179"
         self.port = 4000
         pass
 
@@ -35,10 +36,22 @@ class MyClass(GeneratedClass):
 
     def onInput_onStart(self):
         bufsize = 4096
+        now = datetime.datetime.now()
+        mili = now.strftime("%Y%m%d%H%M%S.") + "%04d" % (now.microsecond // 1000)
+        self.log("PepperTime:" + mili)
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, self.port))
-        sock.send("socket test from pepper")
+        resMessage = ""
+
+        while True:
+            sock.sendall("PepperTime:" + mili)
+            self.log( 'Wait...' )
+
+            resMessage = sock.recv(bufsize)
+            self.log(resMessage)
+            break
+
         sock.close()
         self.onStopped()
         pass
